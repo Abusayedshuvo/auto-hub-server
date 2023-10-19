@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 var cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -34,6 +34,14 @@ async function run() {
 
     app.get("/products", async (req, res) => {
       const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/products/:id", async (req, res) => {
+      const brand = req.params.id;
+      const query = { brand: brand };
+      const cursor = productCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
