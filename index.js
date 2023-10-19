@@ -46,6 +46,36 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.findOne(query);
+      res.send(result);
+    });
+
+    // Cart collection
+    const cartCollection = client.db("assignmentDB").collection("carts");
+
+    app.post("/carts", async (req, res) => {
+      const cart = req.body;
+      const result = await cartCollection.insertOne(cart);
+      res.send(result);
+    });
+
+    app.get("/carts", async (req, res) => {
+      const cursor = cartCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/carts/:id", async (req, res) => {
+      const email = req.params.id;
+      const query = { userEmail: email };
+      const cursor = cartCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
