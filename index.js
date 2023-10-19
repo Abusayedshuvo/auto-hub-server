@@ -53,6 +53,25 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateProduct = req.body;
+      const coffee = {
+        $set: {
+          name: updateProduct.name,
+          brand: updateProduct.brand,
+          types: updateProduct.types,
+          price: updateProduct.price,
+          description: updateProduct.description,
+          rate: updateProduct.rate,
+        },
+      };
+      const result = await productCollection.updateOne(filter, coffee, options);
+      res.send(result);
+    });
+
     // Cart collection
     const cartCollection = client.db("assignmentDB").collection("carts");
 
