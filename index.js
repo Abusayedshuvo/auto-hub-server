@@ -77,11 +77,11 @@ async function run() {
 
     app.post("/carts", async (req, res) => {
       const cart = req.body;
-      // const qurey = { productId: cart.productId };
-      // const find = cartCollection.find(qurey);
-      // if (!find) {
-
-      // }
+      const query = { productId: cart.productId, userEmail: cart.userEmail };
+      const findOne = await cartCollection.findOne(query);
+      if (findOne) {
+        return res.send({ find: true });
+      }
       const result = await cartCollection.insertOne(cart);
       res.send(result);
     });
